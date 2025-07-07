@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TsukiyoX Cheat - Get Your Key</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&family=Orbitron:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: #000;
+      color: #00ffff;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 2rem;
+    }
+
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0; left: 0;
+      z-index: 0;
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.8rem;
+      color: #00ffff;
+      text-align: center;
+      text-shadow: 0 0 15px #00ffffcc;
+      margin-bottom: 1rem;
+      z-index: 2;
+    }
+
+    h1::after {
+      content: '';
+      display: block;
+      width: 100px;
+      height: 4px;
+      margin: 12px auto 0;
+      background: linear-gradient(90deg, #00ffff, #008080);
+      border-radius: 4px;
+      box-shadow: 0 0 12px #00ffffcc;
+      animation: pulse 2.5s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 10px #00ffffaa; }
+      50% { box-shadow: 0 0 20px #00ffffee; }
+    }
+
+    .panel {
+      background: rgba(0, 255, 255, 0.08);
+      border: 1.5px solid #00ffff44;
+      border-radius: 24px;
+      padding: 40px 30px;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.12), inset 0 0 20px rgba(0, 255, 255, 0.1);
+      max-width: 500px;
+      width: 100%;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .key-box {
+      background: rgba(10, 10, 10, 0.6);
+      color: #00f0f0;
+      padding: 20px 28px;
+      font-size: 1.6rem;
+      font-weight: bold;
+      letter-spacing: 3px;
+      word-break: break-word;
+      border-radius: 16px;
+      margin-top: 1.4rem;
+      box-shadow: 0 0 16px #00fff0aa, inset 0 0 10px #00f0f0aa;
+      user-select: all;
+      cursor: default;
+    }
+
+    .btn {
+      margin-top: 1rem;
+      background: transparent;
+      border: 2px solid #00ffff;
+      color: #00ffff;
+      font-weight: 700;
+      padding: 14px 34px;
+      font-size: 1.1rem;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      text-transform: uppercase;
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .btn:hover {
+      background: #00ffff;
+      color: #000;
+      box-shadow: 0 0 20px #00ffffcc;
+    }
+
+    .tooltip {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: #00cc99;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .tooltip.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="particles-js"></div>
+
+  <h1>TsukiyoX Cheat</h1>
+
+  <div class="panel">
+    <div class="key-box" id="keyBox">Press the button below to generate your key</div>
+    <div class="tooltip" id="tooltip">Copied to clipboard!</div>
+
+    <!-- MAIN BUTTON -->
+    <button class="btn" onclick="generateAndShowKey()">🔑 Generate Key</button>
+
+    <!-- EXTRA BUTTONS -->
+    <button class="btn" onclick="window.location.href='upload.html'">⬆️ Upload Code</button>
+    <button class="btn" onclick="window.location.href='Aob.html'">📄 All AOB Codes</button>
+    <button class="btn" onclick="window.location.href='allfile.html'">📁 All Files</button>
+  </div>
+
+  <!-- Particles.js -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS("particles-js", {
+      particles: {
+        number: { value: 90, density: { enable: true, value_area: 800 } },
+        color: { value: "#00ffff" },
+        shape: { type: "circle" },
+        opacity: { value: 0.3, random: true },
+        size: { value: 3, random: true },
+        line_linked: {
+          enable: true,
+          distance: 140,
+          color: "#00ffff",
+          opacity: 0.2,
+          width: 1
+        },
+        move: {
+          enable: true,
+          speed: 1.2,
+          direction: "none",
+          out_mode: "out"
+        }
+      },
+      interactivity: {
+        events: {
+          onhover: { enable: true, mode: "grab" },
+          onclick: { enable: true, mode: "repulse" }
+        },
+        modes: {
+          grab: { distance: 160, line_linked: { opacity: 0.4 } },
+          repulse: { distance: 120, duration: 0.4 }
+        }
+      },
+      retina_detect: true
+    });
+
+    function generateKey() {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      let key = "";
+      for (let i = 0; i < 20; i++) {
+        key += chars.charAt(Math.floor(Math.random() * chars.length));
+        if ((i + 1) % 5 === 0 && i < 19) key += "-";
+      }
+      return key;
+    }
+
+    function generateAndShowKey() {
+      const keyBox = document.getElementById("keyBox");
+      const tooltip = document.getElementById("tooltip");
+
+      keyBox.textContent = "Generating key... 🔄";
+      setTimeout(() => {
+        const key = generateKey();
+        keyBox.textContent = key;
+        navigator.clipboard.writeText(key);
+        tooltip.classList.add("show");
+        setTimeout(() => tooltip.classList.remove("show"), 1600);
+      }, 1200);
+    }
+  </script>
+</body>
+</html>

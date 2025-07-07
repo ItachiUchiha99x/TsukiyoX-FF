@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>All Uploaded Files - TsukiyoX Cheat</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #000;
+    color: #00ffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    position: relative;
+    overflow-x: hidden;
+    user-select: none;
+    z-index: 1;
+  }
+
+  #particles-js {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    top: 0;
+    left: 0;
+    z-index: 0;
+  }
+
+  h1 {
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    font-size: 2.5rem;
+    text-shadow: 0 0 15px #00ffffaa;
+    position: relative;
+    z-index: 1;
+  }
+
+  #file-list {
+    width: 400px;
+    max-width: 90vw;
+    margin: 0 auto 1rem;
+    background: #111;
+    border-radius: 20px;
+    padding: 15px 20px;
+    box-shadow: 0 0 20px #00ffff44 inset;
+    max-height: 400px;
+    overflow-y: auto;
+    font-size: 1rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  #file-list li {
+    list-style: none;
+    padding: 8px 10px;
+    border-bottom: 1px solid #00ffff33;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #00ffffcc;
+    font-family: monospace;
+  }
+  #file-list li:last-child {
+    border-bottom: none;
+  }
+  #file-list .file-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 60%;
+  }
+  #file-list .file-size {
+    font-size: 0.85rem;
+    color: #00ccccaa;
+    flex-shrink: 0;
+    margin-left: 12px;
+    max-width: 30%;
+    text-align: right;
+  }
+  #file-list .file-download {
+    background: #00ffffcc;
+    color: #000;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 0 0 10px #00ffffaa;
+    transition: all 0.3s ease;
+    user-select: none;
+  }
+  #file-list .file-download:hover {
+    background: #00ffff;
+    box-shadow: 0 0 20px #00ffffee;
+  }
+
+  #status {
+    min-height: 24px;
+    font-weight: 600;
+    color: #00cccccc;
+    margin-bottom: 1rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .back-btn {
+    margin-top: auto;
+    background: transparent;
+    border: 2px solid #00ffff;
+    color: #00ffff;
+    border-radius: 50px;
+    padding: 14px 40px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px #00ffffcc;
+    user-select: none;
+    position: relative;
+    z-index: 1;
+  }
+  .back-btn:hover {
+    background: #00ffff;
+    color: #000;
+    box-shadow: 0 0 25px #00ffffee;
+  }
+
+  @media (max-width: 480px) {
+    #file-list {
+      font-size: 0.9rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="particles-js"></div>
+
+<h1>📁 All Uploaded Files</h1>
+
+<ul id="file-list" aria-live="polite" aria-relevant="additions removals">
+  <li>Loading files...</li>
+</ul>
+
+<div id="status" role="alert" aria-live="polite"></div>
+
+<button class="back-btn" onclick="goBack()">← Back to All Files</button>
+
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+  particlesJS("particles-js", {
+    particles: {
+      number: { value: 90, density: { enable: true, value_area: 800 } },
+      color: { value: "#00ffff" },
+      shape: { type: "circle" },
+      opacity: { value: 0.3, random: true, anim: { enable: false } },
+      size: { value: 3, random: true },
+      line_linked: {
+        enable: true,
+        distance: 140,
+        color: "#00ffff",
+        opacity: 0.2,
+        width: 1
+      },
+      move: {
+        enable: true,
+        speed: 1.2,
+        direction: "none",
+        out_mode: "out"
+      }
+    },
+    interactivity: {
+      events: {
+        onhover: { enable: true, mode: "grab" },
+        onclick: { enable: true, mode: "repulse" }
+      },
+      modes: {
+        grab: { distance: 160, line_linked: { opacity: 0.4 } },
+        repulse: { distance: 120, duration: 0.4 }
+      }
+    },
+    retina_detect: true
+  });
+</script>
+
+<script>
+  const fileList = document.getElementById('file-list');
+  const status = document.getElementById('status');
+
+  function goBack() {
+    window.location.href = 'allfile.html';
+  }
+
+  // Load files from IndexedDB and show download buttons
+  function loadFiles() {
+    fileList.innerHTML = '<li>Loading files...</li>';
+    const dbOpen = indexedDB.open('TsukiyoXFilesDB', 1);
+
+    dbOpen.onerror = () => {
+      status.textContent = '❌ Failed to open database.';
+      fileList.innerHTML = '<li>Error loading files.</li>';
+    };
+    dbOpen.onsuccess = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains('files')) {
+        fileList.innerHTML = '<li>No files found.</li>';
+        return;
+      }
+      const transaction = db.transaction(['files'], 'readonly');
+      const store = transaction.objectStore('files');
+      const request = store.getAll();
+
+      request.onerror = () => {
+        status.textContent = '❌ Failed to retrieve files.';
+        fileList.innerHTML = '<li>Error loading files.</li>';
+      };
+
+      request.onsuccess = () => {
+        const files = request.result;
+        if (!files || files.length === 0) {
+          fileList.innerHTML = '<li>No files uploaded yet.</li>';
+          return;
+        }
+
+        fileList.innerHTML = '';
+        files.forEach(({ name, file }) => {
+          const li = document.createElement('li');
+
+          const nameSpan = document.createElement('span');
+          nameSpan.className = 'file-name';
+          nameSpan.textContent = name;
+
+          const sizeSpan = document.createElement('span');
+          sizeSpan.className = 'file-size';
+          sizeSpan.textContent = formatBytes(file.size);
+
+          const downloadBtn = document.createElement('button');
+          downloadBtn.className = 'file-download';
+          downloadBtn.textContent = 'Download';
+          downloadBtn.setAttribute('aria-label', `Download file ${name}`);
+          downloadBtn.addEventListener('click', () => {
+            downloadFile(file, name);
+          });
+
+          li.appendChild(nameSpan);
+          li.appendChild(sizeSpan);
+          li.appendChild(downloadBtn);
+
+          fileList.appendChild(li);
+        });
+        status.textContent = '';
+      };
+    };
+  }
+
+  function formatBytes(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024,
+          sizes = ['Bytes', 'KB', 'MB', 'GB'],
+          i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  function downloadFile(file, filename) {
+    const url = URL.createObjectURL(file);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 100);
+  }
+
+  loadFiles();
+</script>
+
+</body>
+</html>

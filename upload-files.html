@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Upload ZIP/RAR Files - Advanced - TsukiyoX Cheat</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #000;
+    color: #00ffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    user-select: none;
+    position: relative;
+    overflow-x: hidden;
+    z-index: 1;
+  }
+
+  #particles-js {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    top: 0;
+    left: 0;
+    z-index: 0;
+  }
+
+  h1 {
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    font-size: 2.5rem;
+    text-shadow: 0 0 15px #00ffffaa;
+    position: relative;
+    z-index: 1;
+  }
+
+  #drop-area {
+    border: 3px dashed #00ffff88;
+    border-radius: 30px;
+    width: 400px;
+    max-width: 90vw;
+    padding: 40px 20px;
+    text-align: center;
+    transition: border-color 0.3s ease;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 0 25px #00ffff44 inset;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+  }
+  #drop-area.hover {
+    border-color: #00ffff;
+    box-shadow: 0 0 30px #00ffffcc inset;
+  }
+
+  #drop-area p {
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+  }
+  #drop-area small {
+    font-size: 0.85rem;
+    color: #00ccccaa;
+  }
+
+  #fileElem {
+    display: none;
+  }
+
+  #file-list {
+    width: 400px;
+    max-width: 90vw;
+    margin: 0 auto 1rem;
+    background: #111;
+    border-radius: 20px;
+    padding: 15px 20px;
+    box-shadow: 0 0 20px #00ffff44 inset;
+    max-height: 200px;
+    overflow-y: auto;
+    font-size: 1rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  #file-list li {
+    list-style: none;
+    padding: 8px 10px;
+    border-bottom: 1px solid #00ffff33;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #00ffffcc;
+    font-family: monospace;
+  }
+  #file-list li:last-child {
+    border-bottom: none;
+  }
+  #file-list .file-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 75%;
+  }
+  #file-list .file-size {
+    font-size: 0.85rem;
+    color: #00ccccaa;
+    flex-shrink: 0;
+    margin-left: 12px;
+  }
+
+  #actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    max-width: 420px;
+    position: relative;
+    z-index: 1;
+  }
+
+  button {
+    background: #00ffffcc;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 28px;
+    font-weight: 700;
+    color: #000;
+    cursor: pointer;
+    box-shadow: 0 0 15px #00ffffaa;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    user-select: none;
+  }
+  button:hover:not(:disabled) {
+    background: #00ffff;
+    box-shadow: 0 0 25px #00ffffee;
+    transform: scale(1.05);
+  }
+  button:disabled {
+    background: #00808088;
+    cursor: not-allowed;
+    box-shadow: none;
+    color: #004040;
+  }
+
+  #status {
+    min-height: 24px;
+    font-weight: 600;
+    color: #00cccccc;
+    margin-bottom: 1rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  #progress-container {
+    width: 400px;
+    max-width: 90vw;
+    height: 12px;
+    background: #00333344;
+    border-radius: 30px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    box-shadow: inset 0 0 8px #00ffff44;
+    position: relative;
+    z-index: 1;
+    display: none;
+  }
+  #progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #00ffffcc, #008080cc);
+    border-radius: 30px;
+    transition: width 0.3s ease;
+  }
+
+  .back-btn {
+    margin-top: auto;
+    background: transparent;
+    border: 2px solid #00ffff;
+    color: #00ffff;
+    border-radius: 50px;
+    padding: 14px 40px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px #00ffffcc;
+    user-select: none;
+    position: relative;
+    z-index: 1;
+  }
+  .back-btn:hover {
+    background: #00ffff;
+    color: #000;
+    box-shadow: 0 0 25px #00ffffee;
+  }
+
+  @media (max-width: 480px) {
+    #drop-area {
+      padding: 30px 12px;
+    }
+    #file-list {
+      font-size: 0.9rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="particles-js"></div>
+
+<h1>Upload ZIP / RAR Files</h1>
+
+<div id="drop-area" tabindex="0" aria-label="File Upload Area. Drag and drop ZIP or RAR files here or click to select files." role="button">
+  <p>Drag & Drop your ZIP or RAR files here</p>
+  <small>or click to select files</small>
+  <input type="file" id="fileElem" accept=".zip,.rar" multiple aria-hidden="true" />
+</div>
+
+<ul id="file-list" aria-live="polite" aria-relevant="additions removals"></ul>
+
+<div id="actions">
+  <button id="uploadBtn" disabled>Upload Files</button>
+  <button id="clearBtn" disabled>Clear Selection</button>
+</div>
+
+<div id="progress-container" aria-hidden="true">
+  <div id="progress-bar"></div>
+</div>
+
+<div id="status" role="alert" aria-live="polite"></div>
+
+<button class="back-btn" onclick="goBack()">← Back to All Files</button>
+
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+  particlesJS("particles-js", {
+    particles: {
+      number: { value: 90, density: { enable: true, value_area: 800 } },
+      color: { value: "#00ffff" },
+      shape: { type: "circle" },
+      opacity: { value: 0.3, random: true, anim: { enable: false } },
+      size: { value: 3, random: true },
+      line_linked: {
+        enable: true,
+        distance: 140,
+        color: "#00ffff",
+        opacity: 0.2,
+        width: 1
+      },
+      move: {
+        enable: true,
+        speed: 1.2,
+        direction: "none",
+        out_mode: "out"
+      }
+    },
+    interactivity: {
+      events: {
+        onhover: { enable: true, mode: "grab" },
+        onclick: { enable: true, mode: "repulse" }
+      },
+      modes: {
+        grab: { distance: 160, line_linked: { opacity: 0.4 } },
+        repulse: { distance: 120, duration: 0.4 }
+      }
+    },
+    retina_detect: true
+  });
+</script>
+
+<script>
+  // ... Same JS upload logic from previous upload-files.html here ...
+  // Just copy-paste previous JS code block for upload handling here (for brevity I won't repeat it now)
+  
+  // Paste the entire JS part for handling files, drag/drop, upload, progress etc. here
+</script>
+
+<script>
+  // For your convenience, here is the JS again with minimal comments, integrated:
+
+  const dropArea = document.getElementById('drop-area');
+  const fileInput = document.getElementById('fileElem');
+  const fileList = document.getElementById('file-list');
+  const uploadBtn = document.getElementById('uploadBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const status = document.getElementById('status');
+  const progressBar = document.getElementById('progress-bar');
+  const progressContainer = document.getElementById('progress-container');
+
+  let selectedFiles = [];
+
+  function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropArea.addEventListener(eventName, preventDefaults, false);
+  });
+
+  ['dragenter', 'dragover'].forEach(eventName => {
+    dropArea.addEventListener(eventName, () => dropArea.classList.add('hover'), false);
+  });
+
+  ['dragleave', 'drop'].forEach(eventName => {
+    dropArea.addEventListener(eventName, () => dropArea.classList.remove('hover'), false);
+  });
+
+  dropArea.addEventListener('drop', handleDrop, false);
+  dropArea.addEventListener('click', () => fileInput.click());
+  dropArea.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      fileInput.click();
+    }
+  });
+
+  fileInput.addEventListener('change', () => {
+    handleFiles(fileInput.files);
+  });
+
+  function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    handleFiles(files);
+  }
+
+  function handleFiles(files) {
+    status.textContent = '';
+    for (let file of files) {
+      if (!validateFile(file)) {
+        status.textContent = `⚠️ Skipped invalid file: ${file.name}`;
+        continue;
+      }
+      if (!selectedFiles.some(f => f.name === file.name)) {
+        selectedFiles.push(file);
+      }
+    }
+    renderFileList();
+  }
+
+  function validateFile(file) {
+    const validExt = ['zip', 'rar'];
+    const ext = file.name.split('.').pop().toLowerCase();
+    return validExt.includes(ext);
+  }
+
+  function renderFileList() {
+    fileList.innerHTML = '';
+    if (selectedFiles.length === 0) {
+      fileList.innerHTML = '<li>No files selected</li>';
+      uploadBtn.disabled = true;
+      clearBtn.disabled = true;
+      return;
+    }
+
+    selectedFiles.forEach(file => {
+      const li = document.createElement('li');
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'file-name';
+      nameSpan.textContent = file.name;
+
+      const sizeSpan = document.createElement('span');
+      sizeSpan.className = 'file-size';
+      sizeSpan.textContent = formatBytes(file.size);
+
+      li.appendChild(nameSpan);
+      li.appendChild(sizeSpan);
+      fileList.appendChild(li);
+    });
+
+    uploadBtn.disabled = false;
+    clearBtn.disabled = false;
+  }
+
+  function formatBytes(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024,
+          sizes = ['Bytes', 'KB', 'MB', 'GB'],
+          i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  uploadBtn.addEventListener('click', () => {
+    if (selectedFiles.length === 0) return;
+
+    uploadBtn.disabled = true;
+    clearBtn.disabled = true;
+    status.textContent = 'Uploading files...';
+    progressContainer.style.display = 'block';
+    progressBar.style.width = '0%';
+
+    const dbOpen = indexedDB.open('TsukiyoXFilesDB', 1);
+    dbOpen.onerror = () => {
+      status.textContent = '❌ Failed to open database.';
+      uploadBtn.disabled = false;
+      clearBtn.disabled = false;
+      progressContainer.style.display = 'none';
+    };
+    dbOpen.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains('files')) {
+        db.createObjectStore('files', { keyPath: 'name' });
+      }
+    };
+    dbOpen.onsuccess = e => {
+      const db = e.target.result;
+      const transaction = db.transaction(['files'], 'readwrite');
+      const store = transaction.objectStore('files');
+
+      let completed = 0;
+      const total = selectedFiles.length;
+
+      function updateProgress() {
+        const percent = Math.round((completed / total) * 100);
+        progressBar.style.width = percent + '%';
+      }
+
+      selectedFiles.forEach(file => {
+        const request = store.put({ name: file.name, file: file });
+        request.onsuccess = () => {
+          completed++;
+          updateProgress();
+          if (completed === total) {
+            status.textContent = `✅ Uploaded ${total} file(s) successfully!`;
+            selectedFiles = [];
+            renderFileList();
+            uploadBtn.disabled = true;
+            clearBtn.disabled = true;
+            progressContainer.style.display = 'none';
+          }
+        };
+        request.onerror = () => {
+          status.textContent = `❌ Failed to upload file: ${file.name}`;
+          uploadBtn.disabled = false;
+          clearBtn.disabled = false;
+          progressContainer.style.display = 'none';
+        };
+      });
+    };
+  });
+
+  clearBtn.addEventListener('click', () => {
+    selectedFiles = [];
+    renderFileList();
+    status.textContent = '';
+  });
+
+  function goBack() {
+    window.location.href = 'allfile.html';
+  }
+
+  renderFileList();
+</script>
+
+</body>
+</html>

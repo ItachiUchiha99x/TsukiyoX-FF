@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>All Uploaded AOB Codes - TsukiyoX Cheat</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #000;
+      color: #0ff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+      z-index: 1;
+    }
+
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: black;
+      z-index: 0;
+      top: 0;
+      left: 0;
+    }
+
+    h1 {
+      font-weight: 600;
+      font-size: 2.6rem;
+      color: #00ffff;
+      margin-bottom: 1.5rem;
+      z-index: 2;
+      position: relative;
+    }
+
+    h1::after {
+      content: '';
+      display: block;
+      width: 120px;
+      height: 4px;
+      margin: 12px auto 0;
+      background: linear-gradient(90deg, #00ffff, #008080);
+      border-radius: 4px;
+      box-shadow: 0 0 12px #00ffffcc;
+    }
+
+    .code-panel {
+      background: rgba(0, 255, 255, 0.07);
+      border: 1.5px solid #00ffff44;
+      border-radius: 30px;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.15);
+      padding: 30px;
+      max-width: 800px;
+      width: 100%;
+      backdrop-filter: blur(18px);
+      overflow-y: auto;
+      max-height: 460px;
+      z-index: 2;
+      position: relative;
+    }
+
+    .code-item {
+      background: #111;
+      border: 1.5px solid #00ffffaa;
+      border-radius: 20px;
+      padding: 16px 20px;
+      margin-bottom: 1rem;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 1rem;
+      color: #00f0f0;
+      word-wrap: break-word;
+      word-break: break-word;
+      white-space: pre-wrap;
+      box-shadow: 0 0 10px #00f0f033, inset 0 0 10px #00ffff44;
+    }
+
+    .empty-message {
+      text-align: center;
+      font-style: italic;
+      color: #00cccc99;
+      padding-top: 1.5rem;
+    }
+
+    .back-btn {
+      margin-top: 24px;
+      padding: 12px 36px;
+      background: transparent;
+      border: 2px solid #00ffff;
+      color: #00ffff;
+      font-weight: 600;
+      font-size: 1.1rem;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 8px #00ffffaa;
+      z-index: 2;
+      position: relative;
+    }
+
+    .back-btn:hover {
+      background: #00ffff;
+      color: #000;
+      box-shadow: 0 0 20px #00ffffdd;
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2rem;
+      }
+      .code-item {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="particles-js"></div>
+
+  <h1>All Uploaded AOB Codes</h1>
+
+  <div class="code-panel" id="codeList">
+    <!-- Codes will appear here -->
+  </div>
+
+  <button class="back-btn" onclick="goBack()">← Back to Home</button>
+
+  <!-- Particles.js CDN -->
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+  <!-- Particles config -->
+  <script>
+    particlesJS("particles-js", {
+      particles: {
+        number: { value: 90, density: { enable: true, value_area: 800 } },
+        color: { value: "#00ffff" },
+        shape: { type: "circle" },
+        opacity: {
+          value: 0.3,
+          random: true,
+          anim: { enable: false }
+        },
+        size: {
+          value: 3,
+          random: true
+        },
+        line_linked: {
+          enable: true,
+          distance: 140,
+          color: "#00ffff",
+          opacity: 0.2,
+          width: 1
+        },
+        move: {
+          enable: true,
+          speed: 1.2,
+          direction: "none",
+          out_mode: "out"
+        }
+      },
+      interactivity: {
+        events: {
+          onhover: { enable: true, mode: "grab" },
+          onclick: { enable: true, mode: "repulse" }
+        },
+        modes: {
+          grab: { distance: 160, line_linked: { opacity: 0.4 } },
+          repulse: { distance: 120, duration: 0.4 }
+        }
+      },
+      retina_detect: true
+    });
+  </script>
+
+  <!-- Code Load Logic -->
+  <script>
+    const codeListDiv = document.getElementById('codeList');
+    let codes = [];
+
+    function loadCodes() {
+      codes = JSON.parse(localStorage.getItem('uploadedCodes') || '[]');
+      renderCodes();
+    }
+
+    function renderCodes() {
+      codeListDiv.innerHTML = '';
+
+      if (codes.length === 0) {
+        const msg = document.createElement('p');
+        msg.className = 'empty-message';
+        msg.textContent = 'No codes uploaded yet.';
+        codeListDiv.appendChild(msg);
+        return;
+      }
+
+      codes.forEach(code => {
+        const div = document.createElement('div');
+        div.className = 'code-item';
+        div.textContent = code;
+        codeListDiv.appendChild(div);
+      });
+    }
+
+    function goBack() {
+      window.location.href = 'allinone.html';
+    }
+
+    window.onload = loadCodes;
+  </script>
+
+</body>
+</html>
